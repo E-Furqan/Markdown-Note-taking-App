@@ -1,4 +1,4 @@
-package databaseconfig
+package databaseConfig
 
 import (
 	"fmt"

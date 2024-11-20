@@ -1,52 +1,57 @@
 package database
 
 import (
-	"fmt"
-
 	model "github.com/E-Furqan/Markdown-Note-taking-App.git/Model"
 )
 
-func (repo *Repository) CreateNotes(notes *model.Notes) error {
-	tx := repo.DB.Begin()
-	err := repo.DB.Find(notes).Error
-	if err != nil {
-		tx.Rollback()
-		return nil
-	}
+func (repo *Repository) CreateNote(notes *model.Notes) error {
 
-	if err := tx.Commit().Error; err != nil {
-		return fmt.Errorf("error committing transaction: %v", err)
+	err := repo.DB.Create(notes).Error
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func (repo *Repository) UpdateNotes(notes *model.Notes) error {
-	tx := repo.DB.Begin()
-	err := repo.DB.Save(notes).Error
+func (repo *Repository) UpdateNote(notes *model.Notes) error {
+	err := repo.DB.Model(&model.Notes{}).Where("notes_id = ?", notes.NotesId).Updates(map[string]interface{}{
+		"title":        notes.Title,
+		"content":      notes.Content,
+		"created_time": notes.CreatedTime,
+	}).Error
 	if err != nil {
-		tx.Rollback()
-		return nil
-	}
-
-	if err := tx.Commit().Error; err != nil {
-		return fmt.Errorf("error committing transaction: %v", err)
+		return err
 	}
 
 	return nil
 }
 
-func (repo *Repository) DeleteNotes(notes *model.Notes) error {
-	tx := repo.DB.Begin()
+func (repo *Repository) DeleteNote(notes *model.Notes) error {
 	err := repo.DB.Delete(notes).Error
 	if err != nil {
-		tx.Rollback()
-		return nil
-	}
-
-	if err := tx.Commit().Error; err != nil {
-		return fmt.Errorf("error committing transaction: %v", err)
+		return err
 	}
 
 	return nil
+}
+
+func (repo *Repository) ListNotes(notes *[]model.Notes) error {
+	err := repo.DB.Find(notes).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (repo *Repository) FetchNotes(notesId *model.NotesID) (model.Notes, error) {
+	var notes model.Notes
+
+	err := repo.DB.Where("notes_id = ?", notesId.NotesId).First(&notes).Error
+	if err != nil {
+		return model.Notes{}, err
+	}
+
+	return notes, nil
 }

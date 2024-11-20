@@ -21,11 +21,11 @@ func ReadEnv() model.DatabaseEnvVar {
 	envVar.USER = utils.GetEnv("USER1", "furqan")
 	envVar.PASSWORD = utils.GetEnv("PASSWORD", "furqan")
 	envVar.DB_NAME = utils.GetEnv("DB_NAME", "User")
-	portStr := utils.GetEnv("PORT", "5430")
+	portStr := utils.GetEnv("PORT", "5432")
 	envVar.PORT, err = strconv.Atoi(portStr)
 	if err != nil {
 		log.Fatalf("Error converting PORT to integer: %v", err)
-		envVar.PORT = 5430
+		envVar.PORT = 5432
 	}
 	return envVar
 }
