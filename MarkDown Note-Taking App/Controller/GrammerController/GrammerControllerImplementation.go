@@ -62,31 +62,3 @@ func (Ctrl *GrammarController) GrammarCheck(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "No mistakes found"})
 	}
 }
-
-// func (Ctrl *GrammarController) GrammarCheck(c *gin.Context) {
-// 	var request model.NotesID
-// 	if err := c.ShouldBindJSON(&request); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	var notes model.Notes
-// 	notes, err := Ctrl.Repo.FetchNotes(&request)
-// 	if err != nil {
-// 		c.JSON(http.StatusNotFound, gin.H{"Notes not found": err.Error()})
-// 		return
-// 	}
-
-// 	client := resty.New()
-// 	resp, err := client.R().
-// 		SetQueryParam("text", notes.Content).
-// 		SetQueryParam("language", "en-US").
-// 		SetHeader("Content-Type", "application/x-www-form-urlencoded").
-// 		Post("https://api.languagetool.org/v2/check")
-
-// 	if err != nil || resp.StatusCode() != http.StatusOK {
-// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to check grammar"})
-// 		return
-// 	}
-
-// 	c.Data(http.StatusOK, "application/json", resp.Body())
-// }
